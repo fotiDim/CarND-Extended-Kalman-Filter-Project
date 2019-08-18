@@ -30,12 +30,13 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::Update(const VectorXd &z) {
   /**
-   * TODO: update the state by using Kalman Filter equations
+   * TODO: update the state by using Kalman Filter equations - Lidar
    */
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
-   * TODO: update the state by using Extended Kalman Filter equations
+   * TODO: update the state by using Extended Kalman Filter equations - Radar
    */
+  //Convert to cartesian
 }
