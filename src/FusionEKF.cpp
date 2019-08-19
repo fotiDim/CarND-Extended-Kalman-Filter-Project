@@ -91,8 +91,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       double rho_dot = measurement_pack.raw_measurements_[2];
 
       ekf_.x_ << rho * cos(phi), rho * sin(phi), rho_dot * cos(phi), rho_dot * sin(phi);  // Why send velocity
-
-
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // Initialize state
