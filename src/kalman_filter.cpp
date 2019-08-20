@@ -24,16 +24,12 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 
 void KalmanFilter::Predict() {
   /**
-   * TODO: predict the state
+   * Predict the state
    */
   x_ = F_ * x_;
   MatrixXd Ft = F_.transpose();
 
-  MatrixXd oldP = P_;
-  P_ = F_ * Ft + Q_;
-  if (oldP.size() > 0) {  //If there is as a previous measurement
-    P_ = P_ * oldP;
-  }
+  P_ = F_ * P_ * Ft + Q_;
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -57,7 +53,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
-   * TODO: update the state by using Extended Kalman Filter equations - Radar
+   * Update the state by using Extended Kalman Filter equations - Radar
    */
 
   //Convert to polar
@@ -70,18 +66,18 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   double theta = atan2(py, px);
   double rho_dot = (px * vx + py * vy) / rho;
 
-  while(theta < - M_PI) {
-    theta += 2 * M_PI;
-  }
-
-  while(theta > M_PI) {
-    theta -= 2 * M_PI;
-  }
-
   VectorXd h = VectorXd(3);
   h << rho, theta, rho_dot;
 
   VectorXd y = z - h;
+  while(y(1) < - M_PI) {
+    theta += 2 * M_PI;
+  }
+
+  while(y(1) > M_PI) {
+    y(1) -= 2 * M_PI;
+  }
+
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();

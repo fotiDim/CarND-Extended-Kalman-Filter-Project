@@ -40,28 +40,26 @@ FusionEKF::FusionEKF() {
               0, 0, 0.09;
 
   /**
-   * TODO: Finish initializing the FusionEKF.
+   * Finish initializing the FusionEKF.
    * // Set all the above to the properties of ekf_.
    **/
 
-//  * Init Initializes Kalman filter
-//  * @param x_in Initial state
-//  * @param P_in Initial state covariance
-//  * @param in Transition matrix
-//  * @param H_in Measurement matrix
-//  * @param R_in Measurement covariance matrix
-//  * @param Q_in Process covariance matrix
-
-  // the initial state transition matrix F_
+  // Rhe initial state transition matrix F_
   ekf_.F_ = MatrixXd(4, 4);
   ekf_.F_ << 1, 0, 1, 0,
             0, 1, 0, 1,
             0, 0, 1, 0,
             0, 0, 0, 1;
 
-   // TODO: Set the process and measurement noises
+   // Set the process and measurement noises
    /// Info - Q: process noise covariance matrix, R: measurement noise covariance matrix
      // noise_ax and noise_ay are used in Q
+
+  ekf_.P_ = MatrixXd(4, 4);
+  ekf_.P_ << 1, 0, 0, 0,
+  0, 1, 0, 0,
+  0, 0, 1000, 0,
+  0, 0, 0, 1000;
 
 }
 
@@ -96,6 +94,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       // Initialize state
       ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;  //Lidar has no speed data
     }
+
+    previous_timestamp_ = measurement_pack.timestamp_ ;
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
